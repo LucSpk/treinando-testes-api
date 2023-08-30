@@ -2,6 +2,7 @@ package com.lucas.myapi.services.userServices;
 
 import com.lucas.myapi.domain.User;
 import com.lucas.myapi.repositories.UserRepository;
+import com.lucas.myapi.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,6 @@ public class UserService {
 
     public User findById(Integer userId) {
         Optional<User> usuario = repository.findById(userId);
-        return usuario.orElse(null);
+        return usuario.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado."));
     }
 }
