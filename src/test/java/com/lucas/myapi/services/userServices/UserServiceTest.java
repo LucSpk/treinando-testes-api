@@ -99,7 +99,18 @@ class UserServiceTest {
     }
 
     @Test
-    void create() {
+    void whenCreateThenReturnSucess() {
+        when(repository.save(any())).thenReturn(user);
+
+        User response = service.create(user);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+
+        assertEquals(null, response.getId());
+        assertEquals(NAME, response.getNome());
+        assertEquals(LOGIN, response.getLogin());
+        assertEquals(SENHA, response.getSenha());
     }
 
     @Test
