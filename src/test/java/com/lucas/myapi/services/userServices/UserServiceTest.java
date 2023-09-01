@@ -15,7 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 class UserServiceTest {
@@ -66,7 +68,7 @@ class UserServiceTest {
     }
 
     @Test
-    void whenfindAllThenReturnAnListOfUserInstance() {
+    void whenFindAllThenReturnAnListOfUserInstance() {
         when(repository.findAll()).thenReturn(List.of(this.user));
 
         List<User> response = service.findAll();
@@ -81,7 +83,19 @@ class UserServiceTest {
     }
 
     @Test
-    void update() {
+    void whenUpdateTherReturnSucess() {
+        when(repository.save(any())).thenReturn(user);
+        when(repository.findById(anyInt())).thenReturn(optionalUser);
+
+        User response = service.update(ID ,user);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getNome());
+        assertEquals(LOGIN, response.getLogin());
+        assertEquals(SENHA, response.getSenha());
     }
 
     @Test
