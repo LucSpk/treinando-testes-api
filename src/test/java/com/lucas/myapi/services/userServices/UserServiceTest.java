@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,15 +42,15 @@ class UserServiceTest {
     void whenFindByIdThenReturnAnUserInstance() {
         when(repository.findById(anyInt())).thenReturn(this.optionalUser);
 
-        User user = service.findById(ID);
+        User response = service.findById(ID);
 
-        assertNotNull(user);
-        assertEquals(User.class, user.getClass());
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
 
-        assertEquals(ID, user.getId());
-        assertEquals(NAME, user.getNome());
-        assertEquals(LOGIN, user.getLogin());
-        assertEquals(SENHA, user.getSenha());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getNome());
+        assertEquals(LOGIN, response.getLogin());
+        assertEquals(SENHA, response.getSenha());
     }
 
     @Test
@@ -65,7 +66,18 @@ class UserServiceTest {
     }
 
     @Test
-    void findAll() {
+    void whenfindAllThenReturnAnListOfUserInstance() {
+        when(repository.findAll()).thenReturn(List.of(this.user));
+
+        List<User> response = service.findAll();
+
+        assertNotNull(response);
+        assertEquals(1, response.size());
+
+        assertEquals(ID, response.get(0).getId());
+        assertEquals(NAME, response.get(0).getNome());
+        assertEquals(LOGIN, response.get(0).getLogin());
+        assertEquals(SENHA, response.get(0).getSenha());
     }
 
     @Test
