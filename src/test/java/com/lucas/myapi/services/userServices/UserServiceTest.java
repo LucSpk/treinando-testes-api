@@ -2,6 +2,7 @@ package com.lucas.myapi.services.userServices;
 
 import com.lucas.myapi.domain.User;
 import com.lucas.myapi.repositories.UserRepository;
+import com.lucas.myapi.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,18 @@ class UserServiceTest {
         assertEquals(NAME, user.getNome());
         assertEquals(LOGIN, user.getLogin());
         assertEquals(SENHA, user.getSenha());
+    }
+
+    @Test
+    void whenFindByIdThenReturnAnObjectNotFound() {
+        when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Objeto não encontrado."));
+
+        try {
+            service.findById(ID);
+        } catch (Exception ex) {
+            assertEquals(ObjectNotFoundException.class, ex.getClass());
+            assertEquals("Objeto não encontrado.", ex.getMessage());
+        }
     }
 
     @Test
