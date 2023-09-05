@@ -8,6 +8,6 @@ class MyapiApplicationTests {
 
 	@Test
 	void contextLoads() {
+        MyapiApplication.main(new String[] {});
 	}
-
 }
