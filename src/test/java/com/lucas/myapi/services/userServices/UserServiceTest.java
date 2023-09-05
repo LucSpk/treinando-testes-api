@@ -3,12 +3,10 @@ package com.lucas.myapi.services.userServices;
 import com.lucas.myapi.domain.User;
 import com.lucas.myapi.repositories.UserRepository;
 import com.lucas.myapi.services.exceptions.ObjectNotFoundException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
@@ -17,8 +15,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class UserServiceTest {
 
@@ -83,7 +80,7 @@ class UserServiceTest {
     }
 
     @Test
-    void whenUpdateTherReturnSucess() {
+    void whenUpdateThenReturnSuccess() {
         when(repository.save(any())).thenReturn(user);
         when(repository.findById(anyInt())).thenReturn(optionalUser);
 
@@ -107,14 +104,19 @@ class UserServiceTest {
         assertNotNull(response);
         assertEquals(User.class, response.getClass());
 
-        assertEquals(null, response.getId());
+        assertNull(response.getId());
         assertEquals(NAME, response.getNome());
         assertEquals(LOGIN, response.getLogin());
         assertEquals(SENHA, response.getSenha());
     }
 
     @Test
-    void delete() {
+    void whenDeleteWithSuccess() {
+        when(repository.findById(anyInt())).thenReturn(optionalUser);
+        doNothing().when(repository).deleteById(anyInt());
+
+        service.delete(ID);
+        verify(repository, times(1)).deleteById(anyInt());
     }
 
     void start() {
