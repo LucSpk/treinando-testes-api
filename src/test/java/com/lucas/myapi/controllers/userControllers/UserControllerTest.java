@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -84,6 +85,21 @@ class UserControllerTest {
 
     @Test
     void update() {
+        when(service.update(anyInt(), any())).thenReturn(user);
+
+        ResponseEntity<User> response = controller.update(ID, user);
+
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(User.class, response.getBody().getClass());
+
+        assertEquals(ID, response.getBody().getId());
+        assertEquals(NAME, response.getBody().getNome());
+        assertEquals(LOGIN, response.getBody().getLogin());
+        assertEquals(SENHA, response.getBody().getSenha());
     }
 
     @Test
