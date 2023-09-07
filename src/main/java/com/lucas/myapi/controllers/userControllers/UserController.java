@@ -5,6 +5,7 @@ import com.lucas.myapi.services.userServices.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.sound.midi.SysexMessage;
@@ -34,7 +35,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<User> create(@RequestBody User user) {
         return ResponseEntity.created(
-                UriComponentsBuilder.fromPath("/users/{id}").buildAndExpand(
+                ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(
                         service.create(user).getId()
                 ).toUri()
         ).build();
