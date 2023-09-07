@@ -11,7 +11,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +22,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class UserControllerTest {
 
@@ -62,7 +65,7 @@ class UserControllerTest {
     }
 
     @Test
-    void findaAll() {
+    void findAll() {
         List<User> userList = new ArrayList<>();
         userList.add(user);
         when(service.findAll()).thenReturn(userList);
@@ -104,10 +107,26 @@ class UserControllerTest {
 
     @Test
     void create() {
+        when(service.create(any())).thenReturn(user);
+
+        ResponseEntity<User> response = controller.create(user);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getHeaders().get("Location"));
     }
 
     @Test
     void delete() {
+        doNothing().when(service).delete(anyInt());
+
+        ResponseEntity<?> response = controller.delete(ID);
+
+        assertNotNull(response);
+
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        verify(service, times(1)).delete(anyInt());
     }
 
     void start() {
