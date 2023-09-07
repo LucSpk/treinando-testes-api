@@ -20,27 +20,24 @@ public class UserController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<User> findById(@PathVariable Integer id) {
-        User response = service.findById(id);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(service.findById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> findaAll() {
-        List<User> response = service.findAll();
-        return ResponseEntity.ok().body(response);
-    }
+    public ResponseEntity<List<User>> findaAll() { return ResponseEntity.ok().body(service.findAll()); }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<User> update(@PathVariable Integer id, @RequestBody User usuario) {
-        User response = service.update(id, usuario);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(service.update(id, usuario));
     }
 
     @PostMapping
     public ResponseEntity<User> create(@RequestBody User user) {
-        User response = service.create(user);
-        URI uri = UriComponentsBuilder.fromPath("/users/{id}").buildAndExpand(response.getId()).toUri();
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(
+                UriComponentsBuilder.fromPath("/users/{id}").buildAndExpand(
+                        service.create(user).getId()
+                ).toUri()
+        ).build();
     }
 
     @DeleteMapping(value = "/{id}")
