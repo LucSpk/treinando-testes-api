@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.sound.midi.SysexMessage;
 import java.net.URI;
@@ -20,27 +21,24 @@ public class UserController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<User> findById(@PathVariable Integer id) {
-        User response = service.findById(id);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(service.findById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> findaAll() {
-        List<User> response = service.findAll();
-        return ResponseEntity.ok().body(response);
-    }
+    public ResponseEntity<List<User>> findaAll() { return ResponseEntity.ok().body(service.findAll()); }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<User> update(@PathVariable Integer id, @RequestBody User usuario) {
-        User response = service.update(id, usuario);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(service.update(id, usuario));
     }
 
     @PostMapping
     public ResponseEntity<User> create(@RequestBody User user) {
-        User response = service.create(user);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(response.getId()).toUri();
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(
+                ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(
+                        service.create(user).getId()
+                ).toUri()
+        ).build();
     }
 
     @DeleteMapping(value = "/{id}")
